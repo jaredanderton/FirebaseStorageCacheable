@@ -1,137 +1,154 @@
 
 import FirebaseStorage
 
-public protocol FirebaseStorageCacheable {
-    static var targetFileName: String { set get }
-    static var remoteFileName: String { set get }
+@objc public protocol FirebaseStorageCacheable {
+    static var targetPath: String { set get }
+    static var remotePath: String { set get }
+    @objc optional static var bundledFileName: String { set get }
+}
+
+public enum FirebaseStorageCacheableStatus {
+    case upToDate, updateAvailable
 }
 
 public enum FirebaseStorageCacheableError: Error {
-    case invalidTargetUrl,
-    invalidBundleUrl,
-    bundleWriteFailed,
-    
-    invalidStorageReference,
-    invalidTargetModificationDate,
-    
-    remoteMetaDataFailure,
-    invalidRemoteModificationTimestamp,
-    
-    cacheWriteFailed
+    case unresolveableTargetUrl,
+    unresolveableBundledUrl,
+    bundledFileNameMissing,
+    bundledFileNotFound,
+    copyBundledToTargetFailed,
+    unresolveableStorageReference,
+    missingRemoteModified,
+    remoteFileError,
+    writeUpdateToTargetFailed
 }
 
 public extension FirebaseStorageCacheable {
-    public static func copyBundledIfNeeded(onComplete: (() -> Void)? = nil, onError: ((_: FirebaseStorageCacheableError?) -> Void)? = nil) {
-        if targetExists { return }
+    public static func writeFromBundle(
+        onComplete: @escaping (() -> Void),
+        onError: @escaping ((_: FirebaseStorageCacheableError?) -> Void)) {
+        
+        guard bundledFileName != nil else {
+            onError(.bundledFileNameMissing)
+            return
+        }
         
         guard let targetUrl = targetUrl else {
-            onError?(.invalidTargetUrl)
+            onError(.unresolveableTargetUrl)
             return
         }
         
         guard let sourceUrl = bundleSourceUrl else {
-            onError?(.invalidBundleUrl)
+            onError(.unresolveableBundledUrl)
             return
         }
         
         do {
-            try fileManager.copyItem(atPath: sourceUrl.path, toPath: targetUrl.path)
-            onComplete?()
+            let subDir = targetUrl.deletingLastPathComponent()
+            try FileManager.default.createDirectory(at: subDir, withIntermediateDirectories: true, attributes: [:])
+            try FileManager.default.copyItem(atPath: sourceUrl.path, toPath: targetUrl.path)
+            onComplete()
         } catch {
-            onError?(.bundleWriteFailed)
+            onError(.copyBundledToTargetFailed)
         }
     }
     
-    public static func replaceIfAvailable(
-        inProgress: ((_: Double?) -> Void)? = nil,
-        onComplete: ((_: Bool) -> Void)? = nil,
-        onError: ((_: FirebaseStorageCacheableError?) -> Void)? = nil) {
+    public static func getRemoteModified(
+        onComplete: @escaping ((_: Date) -> Void),
+        onError: @escaping ((_: FirebaseStorageCacheableError?) -> Void)) {
         
         guard let storageReference = storageReference else {
-            onError?(.invalidStorageReference)
-            return
-        }
-        
-        guard let targetUrl = targetUrl else {
-            onError?(.invalidTargetUrl)
-            return
-        }
-        
-        
-        guard let targetModificationDate = targetModificationDate else {
-            onError?(.invalidTargetModificationDate)
+            onError(.unresolveableStorageReference)
             return
         }
         
         storageReference.metadata { metadata, error in
             guard error == nil else {
-                onError?(.remoteMetaDataFailure)
+                onError(.remoteFileError)
                 return
             }
             
-            
-            guard let remoteUpdateDate = metadata?.updated else {
-                onError?(.invalidRemoteModificationTimestamp)
+            guard let remoteModified = metadata?.updated else {
+                onError(.missingRemoteModified)
                 return
             }
             
-            if remoteUpdateDate < targetModificationDate {
-                onComplete?(false)
-                return
-            }
-            
-            inProgress?(nil)
-            
-            let downloadTask = storageReference.write(toFile: targetUrl) { url, error in
-                
-                guard error == nil else {
-                    onError?(.cacheWriteFailed)
-                    return
-                }
-                
-                onComplete?(true)
-            }
-            
-            let _ = downloadTask.observe(.progress) { snapshot in
-                inProgress?(snapshot.progress?.fractionCompleted)
-            }
+            onComplete(remoteModified)
         }
     }
     
-    private static var storage: FIRStorage {
-        return FIRStorage.storage()
+    public static func checkForUpdate(
+        onComplete: @escaping ((_: FirebaseStorageCacheableStatus) -> Void),
+        onError: @escaping ((_: FirebaseStorageCacheableError?) -> Void)) {
+        
+        getRemoteModified(onComplete: { remoteModified in
+            
+            guard let targetModified = targetModified else {
+                onComplete(.updateAvailable)
+                return
+            }
+            
+            let status: FirebaseStorageCacheableStatus = remoteModified < targetModified ? .upToDate : .updateAvailable
+            onComplete(status)
+        }, onError: { error in
+            onError(error)
+        })
     }
     
-    private static var targetUrl: URL? {
-        guard let firstDocumentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
-        return firstDocumentsUrl.appendingPathComponent(targetFileName)
+    public static func update(
+        onComplete: @escaping ((_: Bool) -> Void),
+        onError: @escaping ((_: FirebaseStorageCacheableError?) -> Void),
+        inProgress: ((_: Double?) -> Void)? = nil) {
+        
+        guard let storageReference = storageReference else {
+            onError(.unresolveableStorageReference)
+            return
+        }
+        
+        guard let targetUrl = targetUrl else {
+            onError(.unresolveableTargetUrl)
+            return
+        }
+        
+        inProgress?(nil)
+        let downloadTask = storageReference.write(toFile: targetUrl) { url, error in
+            guard error == nil else {
+                onError(.writeUpdateToTargetFailed)
+                return
+            }
+            onComplete(true)
+        }
+        let _ = downloadTask.observe(.progress) { snapshot in
+            inProgress?(snapshot.progress?.fractionCompleted)
+        }
     }
     
-    private static var storageReference: FIRStorageReference? {
-        return storage.reference(forURL: remoteFileName)
-    }
-    
-    private static var fileManager: FileManager {
-        return FileManager.default
-    }
-    
-    private static var bundleSourceUrl: URL? {
-        return Bundle.main.resourceURL?.appendingPathComponent(targetFileName)
-    }
-    
-    private static var targetExists: Bool {
+    public static var targetFileExists: Bool {
         guard let targetUrl = targetUrl else { return false }
         return (try? targetUrl.checkResourceIsReachable()) ?? false
     }
     
-    private static var targetModificationDate: Date? {
+    public static var targetUrl: URL? {
+        guard let firstDocumentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
+        return firstDocumentsUrl.appendingPathComponent(targetPath)
+    }
+    
+    public static var targetModified: Date? {
         guard let targetUrl = targetUrl else { return nil }
-        
         do {
-            let attr = try fileManager.attributesOfItem(atPath: targetUrl.path)
+            let attr = try FileManager.default.attributesOfItem(atPath: targetUrl.path)
             return attr[FileAttributeKey.creationDate] as? Date
         } catch {
             return nil
         }
+    }
+    
+    private static var storageReference: FIRStorageReference? {
+        return FIRStorage.storage().reference(forURL: remotePath)
+    }
+    
+    private static var bundleSourceUrl: URL? {
+        guard let bundledFileName = bundledFileName else { return nil }
+        return Bundle.main.resourceURL?.appendingPathComponent(bundledFileName)
     }
 }
