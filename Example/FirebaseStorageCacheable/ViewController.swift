@@ -9,14 +9,19 @@
 import UIKit
 import FirebaseStorageCacheable
 
-struct Foo: FirebaseStorageCacheable {}
+struct Foo: FirebaseStorageCacheable {
+    
+    static var targetFileName = "master.json"
+    
+    static var remoteFileName = "master.json"
+}
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        Foo().temp()
+        
     }
 
     override func didReceiveMemoryWarning() {
