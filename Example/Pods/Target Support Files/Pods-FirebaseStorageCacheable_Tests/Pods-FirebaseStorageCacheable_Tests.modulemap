@@ -1,0 +1,6 @@
+framework module Pods_FirebaseStorageCacheable_Tests {
+  umbrella header "Pods-FirebaseStorageCacheable_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

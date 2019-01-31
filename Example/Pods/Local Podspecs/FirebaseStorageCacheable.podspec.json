@@ -1,0 +1,28 @@
+{
+  "name": "FirebaseStorageCacheable",
+  "version": "0.1.0",
+  "summary": "A short description of FirebaseStorageCacheable.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/jaredanderton/FirebaseStorageCacheable",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "jaredanderton": "jared@andertondev.com"
+  },
+  "source": {
+    "git": "https://github.com/jaredanderton/FirebaseStorageCacheable.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "10.0"
+  },
+  "source_files": "FirebaseStorageCacheable/Classes/**/*",
+  "swift_version": "4.2",
+  "dependencies": {
+    "Firebase/Storage": [
+      "~> 3.1"
+    ]
+  }
+}

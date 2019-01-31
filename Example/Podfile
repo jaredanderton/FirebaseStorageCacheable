@@ -1,6 +1,7 @@
 use_frameworks!
 
 target 'FirebaseStorageCacheable_Example' do
+  pod 'Firebase/Storage', '~> 3.1'
   pod 'FirebaseStorageCacheable', :path => '../'
 
   target 'FirebaseStorageCacheable_Tests' do
