@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'FirebaseStorageCacheable_Example' do
+  pod 'FirebaseStorageCacheable', :path => '../'
+
+  target 'FirebaseStorageCacheable_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
