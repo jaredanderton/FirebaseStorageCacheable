@@ -33,6 +33,7 @@ TODO: Add long description of the pod here.
   s.source_files = 'FirebaseStorageCacheable/Classes/**/*'
   s.swift_version = '4.2'
   s.platform = :ios, '10.0'
+  s.static_framework = true
   
   # s.resource_bundles = {
   #   'FirebaseStorageCacheable' => ['FirebaseStorageCacheable/Assets/*.png']
