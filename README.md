@@ -25,11 +25,13 @@ pod 'FirebaseStorageCacheable'
 import FirebaseStorageCacheable
 ```
 
-### Conform to the `FirebaseStorageCacheable` protocol
+### Conform to the FirebaseStorageCacheable protocol
 ```swift
 class MyCacheableFile: FirebaseStorageCacheable {
     static var remotePath: String = "gs://remote/path/to/your/file.json"
     static var targetPath: String = "/local/path/relative/to/your/apps/Documents/cached.json"
+    
+    // optional parameter, used to locate a bundled copy, that can be copied to the targetPath
     static var bundledFileName: String = "bundled.json"
 }
 ```
@@ -43,7 +45,7 @@ if MyCacheableFile.targetFileExists {
 }
 ```
 
-### If you bundle a copy of the file with your app, copy it to the target location - if provided (by defining a bundled file name: `static var bundledFileName: String = "bundled.json"`)
+### If you bundle a copy of the file with your app, copy it to the target location - if provided 
 ```swift
 // 
 MyCacheableFile.writeFromBundle(onComplete: {
