@@ -5,6 +5,23 @@
 [![License](https://img.shields.io/cocoapods/l/FirebaseStorageCacheable.svg?style=flat)](https://cocoapods.org/pods/FirebaseStorageCacheable)
 [![Platform](https://img.shields.io/cocoapods/p/FirebaseStorageCacheable.svg?style=flat)](https://cocoapods.org/pods/FirebaseStorageCacheable)
 
+## Overview
+FirebaseStorageCacheable is a libary to that downloads and caches the latest version of a file FirebaseStorage.
+
+This library allows you download and cache files hosted in Firebase storage.
+
+All you need to do is provide the file name to store the file as locally, along with the remote file name, and the library will handle the rest.
+
+It uses timestamps of your local file, compared to the timestamp of the remote file (without downloading the remote file to check), to determine if the remote file is newer.
+
+The replaceIfAvailable, replaces the local file with a copy of the remote one. The API includes onComplete and onError closures as parameters to keep your code loosely coupled.
+
+When replacing a file, you may also provide an onProgress closure to can inform your app of download progress.
+
+It also supports replacing a bundled file, as well.
+
+This does require that you use FirebaseStorage.
+
 ## Requirements
 This pod has been written to work with [Firebase Storage](https://firebase.google.com/docs/storage/ios/start). 
 
