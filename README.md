@@ -7,6 +7,7 @@
 
 ## Requirements
 [Firebase/Storage](https://firebase.google.com/docs/storage/ios/start) 
+
 Currently, version is 3.1 (at time of writing)
 ```ruby
 pod 'Firebase/Storage', '~> 3.1'
