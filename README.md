@@ -108,10 +108,6 @@ if let filePath = MyCacheableFile.targetUrl, let contents = try? Data(contentsOf
 }
 ```
 
-## Author
-
-Jared Anderton, jared@andertondev.com
-
 ## License
 
 FirebaseStorageCacheable is available under the MIT license. See the LICENSE file for more info.
