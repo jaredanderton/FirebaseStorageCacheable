@@ -25,7 +25,7 @@ pod 'FirebaseStorageCacheable'
 import FirebaseStorageCacheable
 ```
 
-### Conform to the FirebaseStorageCacheable protocol
+#### Conform to the FirebaseStorageCacheable protocol
 ```swift
 class MyCacheableFile: FirebaseStorageCacheable {
     static var remotePath: String = "gs://remote/path/to/your/file.json"
