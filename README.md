@@ -5,10 +5,6 @@
 [![License](https://img.shields.io/cocoapods/l/FirebaseStorageCacheable.svg?style=flat)](https://cocoapods.org/pods/FirebaseStorageCacheable)
 [![Platform](https://img.shields.io/cocoapods/p/FirebaseStorageCacheable.svg?style=flat)](https://cocoapods.org/pods/FirebaseStorageCacheable)
 
-## Example
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
 ## Requirements
 [Firebase/Storage](https://firebase.google.com/docs/storage/ios/start)
 
