@@ -6,7 +6,8 @@
 [![Platform](https://img.shields.io/cocoapods/p/FirebaseStorageCacheable.svg?style=flat)](https://cocoapods.org/pods/FirebaseStorageCacheable)
 
 ## Requirements
-[Firebase/Storage](https://firebase.google.com/docs/storage/ios/start) (v3.1 at time of writing)
+[Firebase/Storage](https://firebase.google.com/docs/storage/ios/start) 
+Currently, version is 3.1 (at time of writing)
 ```ruby
 pod 'Firebase/Storage', '~> 3.1'
 ```
