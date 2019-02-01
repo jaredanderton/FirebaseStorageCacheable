@@ -96,9 +96,9 @@ public extension FirebaseStorageCacheable {
     }
     
     public static func update(
-        onComplete: @escaping ((_: Bool) -> Void),
+        onComplete: @escaping (() -> Void),
         onError: @escaping ((_: FirebaseStorageCacheableError?) -> Void),
-        inProgress: ((_: Double?) -> Void)? = nil) {
+        inProgress: ((_: Double) -> Void)? = nil) {
         
         guard let storageReference = storageReference else {
             onError(.unresolveableStorageReference)
@@ -110,16 +110,18 @@ public extension FirebaseStorageCacheable {
             return
         }
         
-        inProgress?(nil)
+        inProgress?(0.0)
         let downloadTask = storageReference.write(toFile: targetUrl) { url, error in
             guard error == nil else {
                 onError(.writeUpdateToTargetFailed)
                 return
             }
-            onComplete(true)
+            onComplete()
         }
         let _ = downloadTask.observe(.progress) { snapshot in
-            inProgress?(snapshot.progress?.fractionCompleted)
+            if let fractionCompleted = snapshot.progress?.fractionCompleted {
+                inProgress?(fractionCompleted)
+            }
         }
     }
     
