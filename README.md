@@ -47,7 +47,6 @@ if MyCacheableFile.targetFileExists {
 
 ### If you bundle a copy of the file with your app, copy it to the target location - if provided 
 ```swift
-// 
 MyCacheableFile.writeFromBundle(onComplete: {
     // copy from bundle to app documents directory succeeded
 },onError: { (error: FirebaseStorageCacheableError?) in
@@ -70,7 +69,7 @@ let date = MyCacheableFile.targetModified
 ```
 
 ### Check to see if there is an updated version
-This method compares the value from getRemoteModified and targetModified to determine whether or not an update is available
+This method compares the value from `MyCacheableFile.getRemoteModified` and `MyCacheableFile.targetModified` to determine whether or not an update is available
 ```swift
 MyCacheableFile.checkForUpdate(onComplete: { (status: FirebaseStorageCacheableStatus) in
     switch status {
