@@ -36,7 +36,7 @@ class MyCacheableFile: FirebaseStorageCacheable {
 }
 ```
 
-### Determine if the target file has been cached locally (either copy from the bundle or downloaded)
+#### Determine if the target file has been cached locally (either copy from the bundle or downloaded)
 ```swift
 if MyCacheableFile.targetFileExists {
     // target file exists
@@ -45,7 +45,7 @@ if MyCacheableFile.targetFileExists {
 }
 ```
 
-### If you bundle a copy of the file with your app, copy it to the target location - if provided 
+#### If you bundle a copy of the file with your app, copy it to the target location - if provided 
 ```swift
 MyCacheableFile.writeFromBundle(onComplete: {
     // copy from bundle to app documents directory succeeded
@@ -54,7 +54,7 @@ MyCacheableFile.writeFromBundle(onComplete: {
 })
 ```
 
-### Get the date of the last time the remote file was modified
+#### Get the date of the last time the remote file was modified
 ```swift
 MyCacheableFile.getRemoteModified(onComplete: { date in
     // now you know when the remote file was updated last
@@ -63,12 +63,12 @@ MyCacheableFile.getRemoteModified(onComplete: { date in
 })
 ```
 
-### Get the date of the last time the target file (local file) was modified
+#### Get the date of the last time the target file (local file) was modified
 ```swift
 let date = MyCacheableFile.targetModified
 ```
 
-### Check to see if there is an updated version
+#### Check to see if there is an updated version
 This method compares the value from `MyCacheableFile.getRemoteModified` and `MyCacheableFile.targetModified` to determine whether or not an update is available
 ```swift
 MyCacheableFile.checkForUpdate(onComplete: { (status: FirebaseStorageCacheableStatus) in
@@ -83,7 +83,7 @@ MyCacheableFile.checkForUpdate(onComplete: { (status: FirebaseStorageCacheableSt
 })
 ```
 
-### Update the target file with the most recent version of the remote file
+#### Update the target file with the most recent version of the remote file
 ```swift
 MyCacheableFile.update(onComplete: {
     // the most recent version of the remote file has been downloaded and cached
@@ -94,7 +94,7 @@ MyCacheableFile.update(onComplete: {
 })
 ```
 
-### Open the file and do your thing 
+#### Open the file and do your thing 
 ```swift
 if let filePath = MyCacheableFile.targetUrl, let contents = try? Data(contentsOf: filePath) {
     // do your thing
@@ -105,7 +105,7 @@ if let filePath = MyCacheableFile.targetUrl, let contents = try? Data(contentsOf
 
 ## Author
 
-jaredanderton, jared@andertondev.com
+Jared Anderton, jared@andertondev.com
 
 ## License
 
