@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'FirebaseStorageCacheable'
-  s.version          = '0.1.0'
-  s.summary          = 'A libary to that downloads and caches the latest version of a file FirebaseStorage.'
+  s.version          = '0.1.2'
+  s.summary          = 'FirebaseStorageCacheable is a libary to that downloads and caches the latest version of a file Firebase Storage.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,19 +18,15 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-This library allows you download and cache files hosted in Firebase storage.
-  
-All you need to do is provide the file name to store the file as locally, along with the remote file name, and the library will handle the rest.
+This library allows you download and cache files hosted in Firebase Storage.
 
-It uses timestamps of your local file, compared to the timestamp of the remote file (without downloading the remote file to check), to determine if the remote file is newer.
+It uses the timestamps of your local file, compared to the timestamp of the remote file (by using the file meta information), to determine if the remote file is newer.
 
-The replaceIfAvailable, replaces the local file with a copy of the remote one. The API includes onComplete and onError closures as parameters to keep your code loosely coupled.
+The `update`, replaces the local file with a copy of the remote one. The API includes onComplete and onError closures as parameters to keep your code loosely coupled.
 
-When replacing a file, you may also provide an onProgress closure to can inform your app of download progress.
+When updatig a file, you may also provide an onProgress closure to can inform your users of the download progress. Or you can let them know they have up-to-date data.
 
-It also supports replacing a bundled file, as well.
-
-This does require that you use FirebaseStorage.
+It also supports copying a bundled file to the target location, as well, so your users don't have to download your app, then download the data next, before using your app.
                        DESC
 
   s.homepage         = 'https://github.com/jaredanderton/FirebaseStorageCacheable'
