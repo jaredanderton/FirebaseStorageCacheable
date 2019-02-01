@@ -6,21 +6,18 @@
 [![Platform](https://img.shields.io/cocoapods/p/FirebaseStorageCacheable.svg?style=flat)](https://cocoapods.org/pods/FirebaseStorageCacheable)
 
 ## Overview
-FirebaseStorageCacheable is a libary to that downloads and caches the latest version of a file FirebaseStorage.
+FirebaseStorageCacheable is a libary to that downloads and caches the latest version of a file [Firebase Storage](https://firebase.google.com/docs/storage/ios/start).
 
-This library allows you download and cache files hosted in Firebase storage.
+This library allows you download and cache files hosted in [Firebase Storage](https://firebase.google.com/docs/storage/ios/start).
 
-All you need to do is provide the file name to store the file as locally, along with the remote file name, and the library will handle the rest.
+It uses the timestamps of your local file, compared to the timestamp of the remote file (by using the file meta information), to determine if the remote file is newer.
 
-It uses timestamps of your local file, compared to the timestamp of the remote file (without downloading the remote file to check), to determine if the remote file is newer.
+The `update`, replaces the local file with a copy of the remote one. The API includes onComplete and onError closures as parameters to keep your code loosely coupled.
 
-The replaceIfAvailable, replaces the local file with a copy of the remote one. The API includes onComplete and onError closures as parameters to keep your code loosely coupled.
+When updatig a file, you may also provide an onProgress closure to can inform your users of the download progress. Or you can let them know they have up-to-date data.
 
-When replacing a file, you may also provide an onProgress closure to can inform your app of download progress.
+It also supports copying a bundled file to the target location, as well, so your users don't have to download your app, then download the data next, before using your app.
 
-It also supports replacing a bundled file, as well.
-
-This does require that you use FirebaseStorage.
 
 ## Requirements
 This pod has been written to work with [Firebase Storage](https://firebase.google.com/docs/storage/ios/start). 
